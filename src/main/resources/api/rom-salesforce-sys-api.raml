@@ -1,0 +1,62 @@
+#%RAML 1.0
+title: rom-salesforce-sys-api
+version: v1
+baseUri: http://rom-salesforce-sys-api/api/v1
+
+types:
+  Lead: !include datatypes/lead.raml
+  Message: !include datatypes/message.raml
+  
+  
+/leads:
+  get:
+    description: "Get all Leads"
+    displayName: "Get Leads"
+    responses:
+      200:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Lead[]
+            example: !include examples/all-leads.json
+
+  /{id}:
+    description: A specific Lead ID
+    uriParameters:
+     id:
+       description: A specific Lead ID
+       type: string
+       example: "1234"
+    get:
+      description: "Get Lead by ID"
+      displayName: "Get Lead by ID"
+      responses:
+        200:
+          headers:
+            content-type:
+              example: "application/json"
+          body:
+            application/json:
+              type: Lead
+              example: !include examples/lead-by-id.json
+
+  post:
+    description: "Create a new Lead"
+    displayName: "Create Lead"
+    body:
+      application/json:
+        type: Lead
+        example: !include examples/lead-by-id.json
+    responses:
+      201:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Message
+            example: {"code": 201, "message": "Candidato creado exitosamente"}
+          
+    

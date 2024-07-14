@@ -1,0 +1,20 @@
+[{
+  "name": "Romel",
+  "lastName": "Herrera",
+  "company": "ABC",
+  "description": "Empresa Tecnologica",
+  "status": "Nuevo",
+  "phone": "111111",
+  "email": "aa@aaa.com",
+  "address": "El Paraiso"
+},
+{
+  "name": "Karem",
+  "lastName": "Meza",
+  "company": "XYZ",
+  "description": "Ropa deportiva",
+  "status": "Nuevo",
+  "phone": "22222",
+  "email": "bb@xyz.com",
+  "address": "Las Acasias"
+}]
