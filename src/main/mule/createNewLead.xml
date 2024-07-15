@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="createNewLeadFlow" doc:id="0704c026-bcda-44be-8338-8463f7890d3d" >
+		<logger level="INFO" doc:name="Start createNewLeadFlow" doc:id="05537cd6-8770-49cd-aa20-ff7939f009fd" message="Start createNewLeadFlow"/>
+		<ee:transform doc:name="Set Input" doc:id="00d82d17-6a63-4d9d-aa3d-88f0b3f2630e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+  FirstName: payload.name,
+  LastName: payload.lastName,
+  Company: payload.company,
+  Description: payload.description,
+  Status: payload.status,
+  Phone: payload.phone,
+  Email: payload.email 
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="adf759e7-5d0e-49b6-b222-3c25e4b319aa" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="07ce8f18-4422-4923-aaff-8fc52544fb00" >
+				<salesforce:create doc:name="Create" doc:id="3dc0f411-35a0-4148-8349-200a4a11eef8" config-ref="Salesforce_Config" type="lead" />
+				<error-handler>
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6f069d21-01bc-40a8-abac-731c2ca460a0" >
+						<ee:transform doc:name="Set Error" doc:id="20f618c1-cf7f-4a01-a5d3-2f6d7ef9b128" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<choice doc:name="Choice" doc:id="23f7bc42-c0b8-4d42-a904-25651b75b5d7" >
+			<when expression="#[payload.items.successful[0] == true]">
+				<ee:transform doc:name="Transform Message" doc:id="4e8e1168-8e6c-4c9a-8453-1443411ab75e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "Lead creado exitosamente",
+	"ID": payload.items.id[0]
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="701964d7-ff11-4f91-b929-af37a2dc6d2f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": payload.items.payload.errors
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Set Response" doc:id="0d3cd392-b9b8-4f70-95e6-17cbdcce0bdd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End createNewLeadFlow" doc:id="816f0bb4-a0d5-4702-8f6e-096b6998f675" message="End createNewLeadFlow"/>
+	</flow>
+</mule>

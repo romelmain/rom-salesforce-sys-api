@@ -105,16 +105,6 @@ output application/json
 		<flow-ref doc:name="getLeadByIdFlow" doc:id="95c6e05d-c98f-42c0-8730-9287c1033ad8" name="getLeadByIdFlow"/>
     </flow>
     <flow name="post:\leads:application\json:rom-salesforce-sys-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  code: 201,
-  message: "Candidato creado exitosamente"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="createNewLeadFlow" doc:id="8334d545-73fe-446d-bc9e-7be094d9f22b" name="createNewLeadFlow"/>
     </flow>
 </mule>

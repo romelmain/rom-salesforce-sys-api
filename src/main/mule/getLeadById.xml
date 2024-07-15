@@ -12,10 +12,26 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload ><![CDATA["SELECT Id, Name FROM Lead WHERE ID = '" ++ vars.id ++ "'" ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<salesforce:query doc:name="Query" doc:id="4c2ac04d-cdc5-4775-9e44-e07eaaf9b6b7" config-ref="Salesforce_Config">
-			<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="5b0ca42f-6a8c-419e-a89c-b703f5e3fb54" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="907253ab-40cd-457c-bb37-46a12a26a6b9" >
+				<salesforce:query doc:name="Lead By ID" doc:id="4c2ac04d-cdc5-4775-9e44-e07eaaf9b6b7" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[#[payload]]]></salesforce:salesforce-query>
 		</salesforce:query>
-		<ee:transform doc:name="Transform Message" doc:id="a5e7e39c-e97a-4025-a6c3-8b4facce2465" >
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e7982026-62ad-4584-8074-4f7055ec3769" >
+						<ee:transform doc:name="Set Error" doc:id="090df560-88be-4f70-9db2-498dd7ab66b1" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Set Response" doc:id="a5e7e39c-e97a-4025-a6c3-8b4facce2465" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
