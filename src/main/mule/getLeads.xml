@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getLeadsFlow" doc:id="a4bbd752-8d2f-4e1d-a8f5-8a6dc5c199ef" >
+		<logger level="INFO" doc:name="Start getLeadsFlow" doc:id="7e8bf05c-5f72-4b7e-85bc-2d7685f1f96f" message="Start getLeadsFlow"/>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="e2928626-936e-4ec2-b344-a4de891b7c5f" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="4cef9997-4072-4385-ac19-299d2fc32077" >
+				<salesforce:query doc:name="List all Leads" doc:id="8e7826ad-549d-4c6b-8f8f-1e11b5db7a21" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[SELECT Id, Name
+FROM Lead]]></salesforce:salesforce-query>
+		</salesforce:query>
+				<error-handler>
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="79d4706c-bc37-4a4a-800f-649d813bdab1" >
+						<ee:transform doc:name="Set Error" doc:id="2a547b79-a00b-4ac2-8c90-ae7d3b6c30cf" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Set Leads to Json" doc:id="5617645a-6629-4608-93db-7dec6d35d6ac" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getLeadsFlow" doc:id="fd2e6bbb-ff05-4696-b364-e024fd1f49d8" message="End getLeadsFlow" />
+	</flow>
+</mule>
