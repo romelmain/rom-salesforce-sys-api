@@ -97,28 +97,12 @@ output application/json
 		<flow-ref doc:name="getLeadsFlow" doc:id="0327c079-bc09-4913-98eb-58ecfc6e2c04" name="getLeadsFlow"/>
     </flow>
     <flow name="get:\leads\(id):rom-salesforce-sys-api-config">
-        <ee:transform doc:name="Transform Message">
+        <ee:transform doc:name="Set Lead Id">
             <ee:variables>
                 <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  name: "Romel",
-  lastName: "Herrera",
-  company: "ABC",
-  description: "Empresa Tecnologica",
-  status: "Nuevo",
-  phone: "111111",
-  email: "aa@aaa.com",
-  address: "El Paraiso"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="getLeadByIdFlow" doc:id="95c6e05d-c98f-42c0-8730-9287c1033ad8" name="getLeadByIdFlow"/>
     </flow>
     <flow name="post:\leads:application\json:rom-salesforce-sys-api-config">
         <ee:transform doc:name="Transform Message">

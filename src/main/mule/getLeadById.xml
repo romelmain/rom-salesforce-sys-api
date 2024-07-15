@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getLeadByIdFlow" doc:id="f430a28a-d309-4b98-9241-6627fff99fa8" >
+		<logger level="INFO" doc:name="Start getLeadByIdFlow" doc:id="c2504468-64c7-4d1d-83dc-1d55e8fc1ece" message="Start getLeadByIdFlow"/>
+		<ee:transform doc:name="Set Query" doc:id="9d7bc25c-f908-4dba-95d5-1b43acd759b5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA["SELECT Id, Name FROM Lead WHERE ID = '" ++ vars.id ++ "'" ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:query doc:name="Query" doc:id="4c2ac04d-cdc5-4775-9e44-e07eaaf9b6b7" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query ><![CDATA[#[payload]]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Message" doc:id="a5e7e39c-e97a-4025-a6c3-8b4facce2465" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getLeadByIdFlow" doc:id="745c4d28-4a43-4b34-861a-09aec56ab309" message="End getLeadByIdFlow"/>
+	</flow>
+</mule>
