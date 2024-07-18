@@ -42,7 +42,7 @@ payload]]></ee:set-payload>
 		</until-successful>
 		<choice doc:name="Choice" doc:id="23f7bc42-c0b8-4d42-a904-25651b75b5d7" >
 			<when expression="#[payload.items.successful[0] == true]">
-				<ee:transform doc:name="Transform Message" doc:id="4e8e1168-8e6c-4c9a-8453-1443411ab75e" >
+				<ee:transform doc:name="Set Success Response" doc:id="4e8e1168-8e6c-4c9a-8453-1443411ab75e" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -55,7 +55,7 @@ output application/json
 				</ee:transform>
 			</when>
 			<otherwise >
-				<ee:transform doc:name="Transform Message" doc:id="701964d7-ff11-4f91-b929-af37a2dc6d2f" >
+				<ee:transform doc:name="Set Failed Response" doc:id="701964d7-ff11-4f91-b929-af37a2dc6d2f" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json

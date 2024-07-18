@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_configxxx" doc:name="HTTP Listener config" doc:id="5af57481-205d-4e65-9f1b-92e94f556fdb" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<flow name="getProductByNameFlow" doc:id="9b44ad29-6c89-426d-baec-0faf5a229e3f" >
+		<logger level="INFO" doc:name="Start getProductByNameFlow" doc:id="df87a93d-79ea-4c74-bb6e-1b7870a75cbf" message="Start getProductByNameFlow"/>
+		<ee:transform doc:name="Set Name" doc:id="89ee3779-61eb-416e-ba3c-ec4423228d36" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="productName" ><![CDATA[attributes.queryParams.name]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="ee469c94-6de7-4d1c-8c5a-51e067079859" >
+			<when expression="#[vars.productName != null]">
+				<ee:transform doc:name="Set Query" doc:id="b811ba60-7352-4be2-9fd3-66db9227d5dc">
+			<ee:message>
+				<ee:set-payload><![CDATA["SELECT Id,name,ProductCode FROM Product2 where name = '" ++ vars.productName ++ "'" ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set Query" doc:id="63e9b1ca-bed1-4d52-9e8f-31505d9f0bbe" >
+					<ee:message >
+						<ee:set-payload ><![CDATA["SELECT Id,name,ProductCode FROM Product2" ]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="f79c30ac-c6fd-4992-b1a9-54cca0a45688" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="632b85cd-46df-4c9c-a0cb-1b81f48ba8f5" >
+				<salesforce:query doc:name="Product By Name" doc:id="5639b0de-cc0d-46e0-ada5-b47266a4cd3c" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[#[payload]]]></salesforce:salesforce-query>
+		</salesforce:query>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cf9c7523-10e7-40dc-a04b-b424df3ed23e" >
+						<ee:transform doc:name="Set Error" doc:id="cda12560-5e89-4478-9704-22114b41befa" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Set Final Response" doc:id="911632c6-f993-42f7-a68e-2fa2053b7b1e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getProductByNameFlow" doc:id="4ad46ff2-a787-420d-aaad-2bd5f6c90f68" message="End getProductByNameFlow"/>
+	</flow>
+</mule>

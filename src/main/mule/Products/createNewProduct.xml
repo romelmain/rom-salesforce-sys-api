@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="createNewProductFlow" doc:id="2e5d3d9f-e5a0-4ab9-aff5-8b76e2ed8c8a" >
+		<logger level="INFO" doc:name="Start createNewProductFlow" doc:id="d5c0d936-a158-4a55-88fb-5fe5fc551b5d" message="Start createNewProductFlow"/>
+		<ee:transform doc:name="Create ProductCode" doc:id="588b2033-b539-4d89-a000-63ac3fc4f563" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="productCode" ><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/json
+var codep = payload.productCode
+var time = (now() as Time) as String
+---
+substring(time, 1, 2) ++ "-" ++ substring(codep, 1, 3) ++ "-" ++ randomInt(1000) as String]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Set Product" doc:id="006c181f-0590-4319-b51e-a3fe355290c0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+[{
+	"ProductCode": vars.productCode,
+	"name": payload.productName
+}]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="97d4e88b-a99f-41c8-9962-02a2333bd0e8" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="e92bf9cf-a879-44b4-a275-f3f2a2cda15c" >
+				<salesforce:create type="Product2" doc:name="Product" doc:id="e900f741-73f2-4588-b032-05a23d827092" config-ref="Salesforce_Config" />
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="80b7ca00-cd41-4a3d-9faa-eb2ca4d2e39e" >
+						<ee:transform doc:name="Set Error" doc:id="ef24ef2a-907a-49bc-b703-198d35e3d451" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<choice doc:name="Choice" doc:id="26fd9834-50b2-4af6-a206-693e8c334345" >
+			<when expression="#[payload.items.successful[0] == true]">
+				<ee:transform doc:name="Set Success Response" doc:id="cfa8ecf2-33bc-4cf7-b6db-72a7db138a87" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "Producto creado exitosamente",
+	"ID": payload.items.id[0]
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set Failed Response" doc:id="faebe456-91a9-4891-a2c8-1ccfe628b657" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": payload.items.payload.errors
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Set Final Response" doc:id="40a9cbdf-6e56-46d0-8554-1b97dd4aa7fa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End createNewProductFlow" doc:id="1f7b4bf9-fbbd-4d58-9a67-caec60d95ae6" message="End createNewProductFlow"/>
+	</flow>
+</mule>

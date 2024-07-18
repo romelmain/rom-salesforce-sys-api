@@ -6,6 +6,7 @@ baseUri: http://rom-salesforce-sys-api/api/v1
 types:
   Lead: !include datatypes/lead.raml
   Message: !include datatypes/message.raml
+  Product: !include  datatypes/product.raml
   
   
 /leads:
@@ -58,5 +59,42 @@ types:
           application/json:
             type: Message
             example: {"code": 201, "message": "Candidato creado exitosamente"}
-          
+
+/products:
+  get:
+    description: "Get all Products or Product by name"
+    displayName: "Get Products"
+    queryParameters:
+      name:
+        displayName: Product Name
+        type: string
+        description: Product name
+        required: false
+        example: "Xiaomi"
+    responses:
+      200:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Product[]
+            example: !include examples/salesforceProducts.json
+
+  post:
+    description: "Create a new Product"
+    displayName: "Create Product"
+    body:
+      application/json:
+        type: Product
+        example: !include examples/newSalesforceProduct.json
+    responses:
+      201:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Message
+            example: {"code": 201, "message": "Producto creado exitosamente"}        
     
