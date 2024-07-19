@@ -94,10 +94,10 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\leads:rom-salesforce-sys-api-config">
-		<flow-ref doc:name="getLeadsFlow" doc:id="122c536a-083e-4823-8a5c-249e99da5a3a" name="getLeadsFlow"/>
+		<flow-ref doc:name="getLeadsFlow" doc:id="c516685f-bbbb-40b6-84ce-3b78b1e4aa60" name="getLeadsFlow"/>
     </flow>
     <flow name="get:\products:rom-salesforce-sys-api-config">
-		<flow-ref doc:name="getProductByNameFlow" doc:id="f4694282-3712-4a73-bc07-fb3bd51d6733" name="getProductByNameFlow"/>
+		<flow-ref doc:name="getProductByNameFlow" doc:id="37f9e9f5-14ad-482c-bf9c-7e10804df5cb" name="getProductByNameFlow"/>
     </flow>
     <flow name="get:\leads\(id):rom-salesforce-sys-api-config">
         <ee:transform doc:name="Set ID">
@@ -105,12 +105,12 @@ output application/json
                 <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-		<flow-ref doc:name="getLeadByIdFlow" doc:id="06722486-9b28-4fe9-9a16-8040c0e66554" name="getLeadByIdFlow"/>
+		<flow-ref doc:name="getLeadByIdFlow" doc:id="105012d1-788b-4416-b6dc-386162cf7316" name="getLeadByIdFlow"/>
     </flow>
     <flow name="post:\leads:application\json:rom-salesforce-sys-api-config">
-		<flow-ref doc:name="createNewLeadFlow" doc:id="705ee250-7e15-4046-a7a6-6d575c895f6f" name="createNewLeadFlow"/>
+		<flow-ref doc:name="createNewLeadFlow" doc:id="3ec85e1a-c87d-45f1-9f92-b40cf02d8e5f" name="createNewLeadFlow"/>
     </flow>
     <flow name="post:\products:application\json:rom-salesforce-sys-api-config">
-		<flow-ref doc:name="createNewProductFlow" doc:id="3044ac78-3645-476f-90be-838e4528d0ef" name="createNewProductFlow"/>
+		<flow-ref doc:name="createNewProductFlow" doc:id="68478352-09b3-4a1d-a315-c247d1962053" name="createNewProductFlow"/>
     </flow>
 </mule>

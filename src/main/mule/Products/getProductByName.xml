@@ -7,9 +7,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
-	<http:listener-config name="HTTP_Listener_configxxx" doc:name="HTTP Listener config" doc:id="5af57481-205d-4e65-9f1b-92e94f556fdb" >
-		<http:listener-connection host="0.0.0.0" port="8085" />
-	</http:listener-config>
 	<flow name="getProductByNameFlow" doc:id="9b44ad29-6c89-426d-baec-0faf5a229e3f" >
 		<logger level="INFO" doc:name="Start getProductByNameFlow" doc:id="df87a93d-79ea-4c74-bb6e-1b7870a75cbf" message="Start getProductByNameFlow"/>
 		<ee:transform doc:name="Set Name" doc:id="89ee3779-61eb-416e-ba3c-ec4423228d36" >

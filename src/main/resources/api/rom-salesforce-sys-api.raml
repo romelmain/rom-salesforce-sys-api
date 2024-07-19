@@ -7,10 +7,31 @@ types:
   Lead: !include datatypes/lead.raml
   Message: !include datatypes/message.raml
   Product: !include  datatypes/product.raml
-  
+
+traits:
+  client-id-required:
+    headers:
+      client_id:
+        type: string
+        example: "1234a7d77dd747f3bba037fce27ed889"
+      client_secret:
+        type: string
+        example: "1234a7d77dd747f3bba037fce27ed889"
+    responses:
+      401:
+        headers:
+          content-type:
+            example: "application/json"
+        description: Unauthorized or invalid client application credentials
+      500:
+        headers:
+          content-type:
+            example: "application/json"
+        description: Bad response from authorization server, or WSDL SOAP Fault error
   
 /leads:
   get:
+    is: [client-id-required]
     description: "Get all Leads"
     displayName: "Get Leads"
     responses:
@@ -24,6 +45,7 @@ types:
             example: !include examples/all-leads.json
 
   /{id}:
+    is: [client-id-required]
     description: A specific Lead ID
     uriParameters:
      id:
@@ -44,6 +66,7 @@ types:
               example: !include examples/lead-by-id.json
 
   post:
+    is: [client-id-required]
     description: "Create a new Lead"
     displayName: "Create Lead"
     body:
@@ -62,6 +85,7 @@ types:
 
 /products:
   get:
+    is: [client-id-required]
     description: "Get all Products or Product by name"
     displayName: "Get Products"
     queryParameters:
@@ -82,6 +106,7 @@ types:
             example: !include examples/salesforceProducts.json
 
   post:
+    is: [client-id-required]
     description: "Create a new Product"
     displayName: "Create Product"
     body:
