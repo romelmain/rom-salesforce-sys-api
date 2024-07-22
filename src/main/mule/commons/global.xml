@@ -18,5 +18,5 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
 	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="d727abe1-1742-47a2-80c5-6bf000097894" >
 		<salesforce:basic-connection username="${salesforce.user}" password="${secure::salesforce.password}" securityToken="${secure::salesforce.token}" />
 	</salesforce:sfdc-config>
-	<api-gateway:autodiscovery apiId="19734400" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="d7b2951e-0525-4f35-b9bd-8e501f4f2203" flowRef="rom-salesforce-sys-api-main" />
+<!-- 	<api-gateway:autodiscovery apiId="19734400" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="d7b2951e-0525-4f35-b9bd-8e501f4f2203" flowRef="rom-salesforce-sys-api-main" /> -->
 </mule>

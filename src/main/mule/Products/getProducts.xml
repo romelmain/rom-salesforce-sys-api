@@ -7,7 +7,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
-	<flow name="getProductByNameFlow" doc:id="9b44ad29-6c89-426d-baec-0faf5a229e3f" >
+	<flow name="getProducsFlow" doc:id="9b44ad29-6c89-426d-baec-0faf5a229e3f" >
 		<logger level="INFO" doc:name="Start getProductByNameFlow" doc:id="df87a93d-79ea-4c74-bb6e-1b7870a75cbf" message="Start getProductByNameFlow"/>
 		<ee:transform doc:name="Set Name" doc:id="89ee3779-61eb-416e-ba3c-ec4423228d36" >
 			<ee:message >

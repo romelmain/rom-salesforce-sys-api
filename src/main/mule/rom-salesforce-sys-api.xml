@@ -97,7 +97,7 @@ output application/json
 		<flow-ref doc:name="getLeadsFlow" doc:id="c516685f-bbbb-40b6-84ce-3b78b1e4aa60" name="getLeadsFlow"/>
     </flow>
     <flow name="get:\products:rom-salesforce-sys-api-config">
-		<flow-ref doc:name="getProductByNameFlow" doc:id="37f9e9f5-14ad-482c-bf9c-7e10804df5cb" name="getProductByNameFlow"/>
+		<flow-ref doc:name="getProducsFlow" doc:id="37f9e9f5-14ad-482c-bf9c-7e10804df5cb" name="getProducsFlow"/>
     </flow>
     <flow name="get:\leads\(id):rom-salesforce-sys-api-config">
         <ee:transform doc:name="Set ID">
